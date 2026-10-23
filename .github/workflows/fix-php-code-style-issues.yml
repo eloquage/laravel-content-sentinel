@@ -30,8 +30,10 @@ jobs:
           php-version: '8.5'
           coverage: none
 
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Install Pint
+        run: |
+          mkdir -p "$RUNNER_TEMP/pint"
+          composer require --working-dir="$RUNNER_TEMP/pint" 'laravel/pint:^1.14' --no-interaction --no-progress
 
       - name: Check code style
-        run: ./vendor/bin/pint --test
+        run: "$RUNNER_TEMP/pint/vendor/bin/pint" --test
