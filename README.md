@@ -1,6 +1,6 @@
 # Laravel Content Sentinel
 
-[![Tests](https://github.com/illuma-law/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/illuma-law/laravel-content-sentinel/actions)
+[![Tests](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-content-sentinel/actions)
 [![Packagist License](https://img.shields.io/badge/Licence-MIT-blue)](http://choosealicense.com/licenses/mit/)
 [![Latest Stable Version](https://img.shields.io/packagist/v/illuma-law/laravel-content-sentinel?label=Version)](https://packagist.org/packages/illuma-law/laravel-content-sentinel)
 
