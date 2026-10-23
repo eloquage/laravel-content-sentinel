@@ -1,189 +1,60 @@
 # Laravel Content Sentinel
 
-[![Tests](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-content-sentinel/actions)
-[![Packagist License](https://img.shields.io/badge/Licence-MIT-blue)](http://choosealicense.com/licenses/mit/)
-[![Latest Stable Version](https://img.shields.io/packagist/v/illuma-law/laravel-content-sentinel?label=Version)](https://packagist.org/packages/illuma-law/laravel-content-sentinel)
+![Laravel Content Sentinel moderation pipeline](art/banner.png)
 
-A configurable content safeguard and moderation pipeline for Laravel applications.
+A configurable pipeline for checking user or AI generated content before you
+save or publish it.
 
-Content Sentinel acts as an automated editor for user-generated content or AI-generated text. It uses a Pipeline architecture to run content through a sequence of customizable "gates" before it is processed or published. These gates can either block the content entirely (throwing a hard error) or attach warnings (flagging the content for manual review).
+[![Tests](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml)
+[![Latest Version](https://img.shields.io/packagist/v/illuma-law/laravel-content-sentinel)](https://packagist.org/packages/illuma-law/laravel-content-sentinel)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Features
+Requires PHP 8.3+, Laravel 11–13, Filament Support 4 or 5, and Spatie Laravel
+Model States 2.10+.
 
-- **Pipeline Architecture:** Run your content through multiple independent checks sequentially.
-- **Severity Levels:** Differentiates between hard blocks (e.g., prohibited phrases) and warnings (e.g., sensitive topics).
-- **Built-in Gates:** Includes common checks for prohibited phrases, brand voice adherence, and duplicate content.
-- **Extensible:** Easily create custom gates tailored to your business logic.
-
-## Built-in Gates
-
-| Gate | Key | Severity | Description |
-| :--- | :--- | :--- | :--- |
-| `ProhibitedPhrasesGate` | `prohibited_phrases` | **block** | Blocks content containing any configured prohibited phrase. |
-| `BrandVoiceGate` | `brand_voice` | warning | Warns when content contains brand-forbidden words. |
-| `DuplicateContentGate` | `duplicate_content` | warning | Warns when content similarity to recent content exceeds the threshold. |
-| `SensitiveTopicGate` | `sensitive_topic` | warning | Warns when content touches any configured sensitive topic. |
-| `HallucinationGate` | `hallucination` | warning | Warns when claims in the metadata cannot be verified. |
-
-## Installation
-
-You can install the package via composer:
+## Install
 
 ```bash
 composer require illuma-law/laravel-content-sentinel
+php artisan vendor:publish --tag=content-sentinel-config
 ```
 
-Publish the config file to customize which gates run and how they behave:
+The published config selects the gates and their settings. Built-in gates check
+prohibited phrases, brand voice, duplicate content, sensitive topics, and
+claims with a fact checker.
 
-```bash
-php artisan vendor:publish --tag="content-sentinel-config"
-```
-
-## Configuration
-
-The published `config/content-sentinel.php` file allows you to define your pipeline and the settings for each gate:
+## Check content
 
 ```php
-return [
-    // Register the gates you want to run, in order
-    'gates' => [
-        \IllumaLaw\ContentSentinel\Gates\ProhibitedPhrasesGate::class,
-        \IllumaLaw\ContentSentinel\Gates\BrandVoiceGate::class,
-        \IllumaLaw\ContentSentinel\Gates\SensitiveTopicGate::class,
-    ],
-
-    // Specific configuration for the ProhibitedPhrasesGate
-    'prohibited_phrases' => [
-        'swear_words',
-        'competitor_name',
-    ],
-    
-    // Configuration for the BrandVoiceGate
-    'brand_voice_violations' => [
-        'cheap',
-        'guaranteed',
-    ],
-];
-```
-
-## Usage & Integration
-
-The package works by creating a `SentinelPayload` object, running it through the `ContentSentinel` pipeline, and inspecting the resulting `SafeguardResult`.
-
-### Using the Facade
-
-You can use the Facade to quickly evaluate a payload:
-
-```php
-use IllumaLaw\ContentSentinel\Facades\ContentSentinel;
 use IllumaLaw\ContentSentinel\DTOs\SentinelPayload;
+use IllumaLaw\ContentSentinel\Facades\ContentSentinel;
 
-$payload = new SentinelPayload(
-    content: 'Our new product is cheap and guaranteed to work!',
-    title: 'Product Launch',
-    caption: 'Buy now!',
-    metadata: ['author_id' => 123]
-);
-
-$result = ContentSentinel::check($payload);
+$result = ContentSentinel::check(new SentinelPayload(
+    content: 'Our product is guaranteed to work!',
+    title: 'Product launch',
+    metadata: ['author_id' => 123],
+));
 
 if ($result->hasBlocks()) {
-    // A block gate failed. Prevent the action.
-    abort(422, 'Content violates policies: ' . json_encode($result->blocks));
+    abort(422, 'This content cannot be published.');
 }
 
 if ($result->hasWarnings()) {
-    // A warning gate failed. Allow it, but flag it for review.
-    logger()->warning('Content flagged for review', $result->warnings);
+    logger()->warning('Content needs review', $result->warnings);
 }
 
-// Proceed to save/publish...
+// Save or publish the content.
 ```
 
-### Dependency Injection
+Blocked content should be stopped by your application. Warnings are returned
+for your application to send to a moderation queue or reviewer.
 
-Alternatively, you can resolve the `ContentSentinel` service from the container:
+## Test
 
-```php
-use IllumaLaw\ContentSentinel\ContentSentinel;
-use IllumaLaw\ContentSentinel\DTOs\SentinelPayload;
-
-class ContentController extends Controller
-{
-    public function store(Request $request, ContentSentinel $sentinel)
-    {
-        $payload = new SentinelPayload(content: $request->input('body'));
-        $result = $sentinel->check($payload);
-        
-        if ($result->hasBlocks()) {
-            return back()->withErrors(['body' => 'Contains prohibited content.']);
-        }
-        
-        // ...
-    }
-}
-```
-
-### Creating Custom Gates
-
-To create your own gate, implement the `SentinelGate` interface. The gate receives the payload and the configuration array. 
-
-Use the `$payload->addResult()` method to append your check's status.
-
-```php
-namespace App\Gates;
-
-use Closure;
-use IllumaLaw\ContentSentinel\Contracts\SentinelGate;
-use IllumaLaw\ContentSentinel\DTOs\GateResult;
-use IllumaLaw\ContentSentinel\DTOs\SentinelPayload;
-use IllumaLaw\ContentSentinel\Enums\Severity;
-
-class ProfanityGate implements SentinelGate
-{
-    public function __construct(private readonly array $config = []) {}
-
-    public function handle(SentinelPayload $payload, Closure $next): SentinelPayload
-    {
-        if (str_contains(strtolower($payload->content), 'badword')) {
-            $payload->addResult(new GateResult(
-                gateKey: 'profanity_check',
-                passed: false,
-                severity: Severity::BLOCK, // or Severity::WARNING
-                message: 'Content contains profanity.',
-                details: ['word' => 'badword']
-            ));
-        } else {
-             $payload->addResult(new GateResult(
-                gateKey: 'profanity_check',
-                passed: true,
-                severity: Severity::INFO,
-                message: 'No profanity detected.'
-            ));
-        }
-
-        return $next($payload);
-    }
-}
-```
-
-Register your custom gate in the `config/content-sentinel.php` file:
-
-```php
-    'gates' => [
-        \App\Gates\ProfanityGate::class,
-        // ...
-    ],
-```
-
-## Testing
-
-Run the test suite:
-
-```shell
+```bash
 composer test
+composer analyse
+vendor/bin/pint --test
 ```
 
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT licensed. See [LICENSE](LICENSE).

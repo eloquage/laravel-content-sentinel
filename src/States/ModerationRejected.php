@@ -6,5 +6,5 @@ namespace IllumaLaw\ContentSentinel\States;
 
 final class ModerationRejected extends ModerationState
 {
-    public static $name = 'rejected';
+    public static string $name = 'rejected';
 }

@@ -18,7 +18,8 @@ class ContentSentinelServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-content-sentinel')
-            ->hasConfigFile();
+            ->hasConfigFile()
+            ->hasTranslations();
     }
 
     public function registeringPackage(): void
