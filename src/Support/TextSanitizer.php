@@ -41,7 +41,7 @@ final class TextSanitizer
     {
         return preg_replace_callback(
             '/<((?:https?|mailto):[^>\s]+)>/iu',
-            static fn (array $m): string => $m[1] ?? '',
+            static fn (array $m): string => $m[1],
             $text,
         ) ?? $text;
     }

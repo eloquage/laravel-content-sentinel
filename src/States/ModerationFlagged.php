@@ -6,5 +6,5 @@ namespace IllumaLaw\ContentSentinel\States;
 
 final class ModerationFlagged extends ModerationState
 {
-    public static $name = 'flagged';
+    public static string $name = 'flagged';
 }

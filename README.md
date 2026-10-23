@@ -1,10 +1,14 @@
 # Laravel Content Sentinel
 
+![Laravel Content Sentinel moderation pipeline](art/banner.png)
+
 [![Tests](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-content-sentinel/actions)
 [![Packagist License](https://img.shields.io/badge/Licence-MIT-blue)](http://choosealicense.com/licenses/mit/)
 [![Latest Stable Version](https://img.shields.io/packagist/v/illuma-law/laravel-content-sentinel?label=Version)](https://packagist.org/packages/illuma-law/laravel-content-sentinel)
 
 A configurable content safeguard and moderation pipeline for Laravel applications.
+
+Requires PHP 8.3+, Laravel 11–13, Filament Support 4 or 5, and Spatie Laravel Model States 2.10+.
 
 Content Sentinel acts as an automated editor for user-generated content or AI-generated text. It uses a Pipeline architecture to run content through a sequence of customizable "gates" before it is processed or published. These gates can either block the content entirely (throwing a hard error) or attach warnings (flagging the content for manual review).
 
