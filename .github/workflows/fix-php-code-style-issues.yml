@@ -36,4 +36,5 @@ jobs:
           composer require --working-dir="$RUNNER_TEMP/pint" 'laravel/pint:^1.14' --no-interaction --no-progress
 
       - name: Check code style
-        run: "$RUNNER_TEMP/pint/vendor/bin/pint" --test
+        run: |
+          "$RUNNER_TEMP/pint/vendor/bin/pint" --test
