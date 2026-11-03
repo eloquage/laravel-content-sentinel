@@ -1,4 +1,4 @@
-# illuma-law/laravel-content-sentinel
+# eloquage/laravel-content-sentinel
 
 Automated editor and moderation pipeline for user-generated or AI-generated text using a Pipeline architecture.
 

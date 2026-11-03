@@ -7,7 +7,7 @@ metadata:
 
 # Writing and documentation
 
-Write documentation for `illuma-law/laravel-content-sentinel` (A configurable content safeguard and moderation pipeline for Laravel.) that lets the intended reader complete a concrete task.
+Write documentation for `eloquage/laravel-content-sentinel` (A configurable content safeguard and moderation pipeline for Laravel.) that lets the intended reader complete a concrete task.
 
 ## Source and structure
 
