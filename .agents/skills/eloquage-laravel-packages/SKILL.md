@@ -7,7 +7,7 @@ metadata:
 
 # Laravel package development
 
-Use this skill when changing this Composer package: `illuma-law/laravel-content-sentinel` — A configurable content safeguard and moderation pipeline for Laravel.
+Use this skill when changing this Composer package: `eloquage/laravel-content-sentinel` — A configurable content safeguard and moderation pipeline for Laravel.
 
 ## Package context
 

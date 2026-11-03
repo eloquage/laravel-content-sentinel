@@ -7,7 +7,7 @@ metadata:
 
 # GitHub README
 
-For `illuma-law/laravel-content-sentinel` (A configurable content safeguard and moderation pipeline for Laravel.), make the README useful to a developer deciding whether to install the package and then trying it in a real application.
+For `eloquage/laravel-content-sentinel` (A configurable content safeguard and moderation pipeline for Laravel.), make the README useful to a developer deciding whether to install the package and then trying it in a real application.
 
 ## Ground every claim
 

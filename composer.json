@@ -1,5 +1,5 @@
 {
-    "name": "illuma-law/laravel-content-sentinel",
+    "name": "eloquage/laravel-content-sentinel",
     "description": "A configurable content safeguard and moderation pipeline for Laravel.",
     "keywords": [
         "illuma-law",

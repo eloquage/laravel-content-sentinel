@@ -6,7 +6,7 @@ A configurable pipeline for checking user or AI generated content before you
 save or publish it.
 
 [![Tests](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml/badge.svg)](https://github.com/eloquage/laravel-content-sentinel/actions/workflows/run-tests.yml)
-[![Latest Version](https://img.shields.io/packagist/v/illuma-law/laravel-content-sentinel)](https://packagist.org/packages/illuma-law/laravel-content-sentinel)
+[![Latest Version](https://img.shields.io/packagist/v/eloquage/laravel-content-sentinel)](https://packagist.org/packages/eloquage/laravel-content-sentinel)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Requires PHP 8.3+, Laravel 11–13, Filament Support 4 or 5, and Spatie Laravel
@@ -15,7 +15,7 @@ Model States 2.10+.
 ## Install
 
 ```bash
-composer require illuma-law/laravel-content-sentinel
+composer require eloquage/laravel-content-sentinel
 php artisan vendor:publish --tag=content-sentinel-config
 ```
 
