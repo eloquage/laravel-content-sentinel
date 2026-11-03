@@ -2,7 +2,7 @@
     "name": "eloquage/laravel-content-sentinel",
     "description": "A configurable content safeguard and moderation pipeline for Laravel.",
     "keywords": [
-        "illuma-law",
+        "eloquage",
         "laravel",
         "laravel-content-sentinel"
     ],
@@ -10,8 +10,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "illuma-law",
-            "email": "support@illuma.law",
+            "name": "Eloquage",
             "role": "Developer"
         }
     ],
